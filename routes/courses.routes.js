@@ -37,7 +37,7 @@ router.post('/create', auth, async (req, res) => {
         const {name} = req.body
 
         const course = new Course({
-            name: name, owner: req.user.userId, objects: null
+            name: name, description: name, owner: req.user.userId, objects: null
         })
 
         await course.save()
