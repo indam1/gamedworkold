@@ -1,59 +1,11 @@
-import {
-    Box,
-    ButtonUnstyled,
-    buttonUnstyledClasses,
-    FormControl,
-    IconButton,
-    Input,
-    InputAdornment,
-    InputLabel,
-    Link,
-    Stack
-} from "@mui/material";
+import {Box, FormControl, IconButton, Input, InputAdornment, InputLabel, Link, Stack} from "@mui/material";
 import React, {useContext, useEffect, useState} from "react";
-import styled from "@emotion/styled";
 import {useHttp} from "../hooks/http.hook";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import GoogleLogin from "react-google-login";
 import {AuthContext} from "../context/AuthContext";
-
-const CustomButtonRoot = styled('button')(`
-  background-color: #6FE9CD;
-  padding: 15px 20px;
-  border-radius: 10px;
-  color: #000;
-  font-weight: 600;
-  font-family: Montserrat;
-  font-size: 16px;
-  transition: all 200ms ease;
-  cursor: pointer;
-  box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 0 rgba(0, 127, 255, 0);
-  border: none;
-
-  &:hover {
-    background-color: #6FE9CD;
-    opacity: 0.4; 
-  }
-
-  &.${buttonUnstyledClasses.active} {
-    background-color: #138C71;
-  }
-
-  &.${buttonUnstyledClasses.focusVisible} {
-    box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 5px rgba(0, 127, 255, 0.5);
-    outline: none;
-  }
-
-  &.${buttonUnstyledClasses.disabled} {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: 0 0 0 0 rgba(0, 127, 255, 0);
-  }
-`);
-
-function CustomButton(props) {
-    return <ButtonUnstyled {...props} component={CustomButtonRoot}/>;
-}
+import CustomButton from "./components/CustomButton";
+import TransitionAlerts from "./components/TransitionAlerts";
 
 function RegPage() {
     const auth = useContext(AuthContext)
@@ -61,8 +13,11 @@ function RegPage() {
     const [form, setForm] = useState({
         email: '',
         password: '',
-        fullName: '',
+        firstName: '',
+        lastName: '',
     })
+    const [message, setMessage] = useState("")
+    const [open, setOpen] = useState(false)
 
     const [showPassword, setShowPassword] = useState(false)
 
@@ -74,12 +29,16 @@ function RegPage() {
         const result = res?.profileObj
 
         try {
-            const data = await request('api/auth/register', 'POST', {email: result.email, password: "testpassword", fullName: (result.givenName + " " + result.familyName)})
+            const data = await request('api/auth/register', 'POST', {
+                email: result.email,
+                password: "testpassword",
+                firstName: result.givenName,
+                lastName: result.familyName
+            })
             console.log("Data: ", data);
             const log = await request('/api/auth/login', 'POST', {email: result.email, password: "testpassword"})
             auth.login(log.token, log.userId)
         } catch (e) {
-            
         }
     }
 
@@ -101,7 +60,10 @@ function RegPage() {
             console.log("Data: ", data);
             const log = await request('/api/auth/login', 'POST', {email: form.email, password: form.password})
             auth.login(log.token, log.userId)
-        } catch (e) {}
+        } catch (e) {
+            setMessage(e.message)
+            setOpen(true)
+        }
     }
 
     return (
@@ -151,20 +113,34 @@ function RegPage() {
                     >
                         <span>- OR -</span>
                     </div>
+                    <Stack direction={"row"} sx={{width: "35%"}} justifyContent={"space-between"}>
+                        <FormControl sx={{width: "45%"}} variant={"standard"}>
+                            <InputLabel htmlFor="standard-required">First Name</InputLabel>
+                            <Input
+                                required
+                                id="standard-required"
+                                value={form.firstName}
+                                onChange={changeHandler}
+                                label="First Name"
+                                variant="standard"
+                                name="firstName"
+                            />
+                        </FormControl>
+                        <FormControl sx={{width: "45%"}} variant={"standard"}>
+                            <InputLabel htmlFor="standard-required">Last Name</InputLabel>
+                            <Input
+                                required
+                                id="standard-required"
+                                value={form.lastName}
+                                onChange={changeHandler}
+                                label="Last Name"
+                                variant="standard"
+                                name="lastName"
+                            />
+                        </FormControl>
+                    </Stack>
                     <FormControl sx={{width: "35%"}} variant={"standard"}>
-                        <InputLabel htmlFor="standard-adornment-password">Full Name</InputLabel>
-                        <Input
-                            required
-                            id="standard-required"
-                            value={form.fullName}
-                            onChange={changeHandler}
-                            label="Full Name"
-                            variant="standard"
-                            name="fullName"
-                        />
-                    </FormControl>
-                    <FormControl sx={{width: "35%"}} variant={"standard"}>
-                        <InputLabel htmlFor="standard-adornment-password">Email</InputLabel>
+                        <InputLabel htmlFor="standard-required">Email</InputLabel>
                         <Input
                             required
                             id="standard-required"
@@ -207,6 +183,13 @@ function RegPage() {
                             Create Account
                         </CustomButton>
                     </Box>
+                    {open && <TransitionAlerts
+                        style={{width: "35%", borderRadius: 10}}
+                        messages={message}
+                        onChange={(smth) => {
+                            setOpen(smth)
+                        }}
+                    />}
                     <div style={{
                         fontFamily: "Montserrat",
                         fontWeight: 500,

@@ -55,7 +55,7 @@ function GameElements() {
                             id: 'test' + counterStore.counterTest.toString(),
                             curQuestion: 0,
                             counter: counterStore.counterCommon,
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
 
                             x: mainWidth * 0.8 / 2,
                             y: mainHeight * 0.7575 / 2,
@@ -179,12 +179,11 @@ function GameElements() {
 
                         elemStore.addFlashcard({
                             counter: counterStore.counterCommon,
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
                             x: mainWidth * 0.8 / 2,
                             y: mainHeight * 0.7575 / 2,
                             height: 200,
                             width: 200,
-                            fontSize: 24,
                             cornerRadius: 0,
                             fill: "#000002",
                             theme: {
@@ -212,11 +211,20 @@ function GameElements() {
                                 fill: "#FFFFFE",
                             },
                             input: {
+                                text: "",
                                 x: 0,
                                 y: 90,
                                 width: 150,
                                 height: 25,
                                 fontSize: 20,
+                                backgroundFill: "white",
+                                textFill: "black",
+                                stroke: "white",
+                                strokeWidth: 1,
+                                cornerRadius: 0,
+                                fontFamily: "Arial",
+                                align: "center",
+                                verticalAlign: "middle"
                             },
                             button: {
                                 align: 'center',
@@ -282,20 +290,21 @@ function GameElements() {
 
                         elemStore.addTextquest({
                             counter: counterStore.counterCommon,
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
                             x: mainWidth * 0.8 / 2,
                             y: mainHeight * 0.7575 / 2,
-                            curText: 0,
+                            curUnit: 0,
                             id: 'textquest' + counterStore.counterTextquest.toString(),
-                            unit: {
-                                height: 200,
-                                width: 200,
+                            height: 200,
+                            width: 200,
+                            fill: "#FFFFFE",
+                            end: 2,
+                            opacity: 1,
+                            cornerRadius: 0,
+                            text: {
                                 fontSize: 20,
                                 fontFamily: "Arial",
-                                backgroundFill: "#FFFFFE",
-                                textFill: "#000002",
-                                opacity: 1,
-                                cornerRadius: 0,
+                                fill: "#000002",
                             },
                             button: {
                                 width: 50,
@@ -306,17 +315,42 @@ function GameElements() {
                                 backgroundFill: "#000002",
                                 textFill: "#FFFFFE",
                             },
-                            units: [{
-                                x: 0,
-                                y: 0,
-                                number: 0,
-                                text: "Текст",
-                                buttons: [{
+                            units: [
+                                {
                                     x: 0,
-                                    y: 50,
-                                    text: 'д1'
-                                }],
-                            }],
+                                    y: 0,
+                                    number: 0,
+                                    text: "Текст1",
+                                    buttons: [
+                                        {
+                                            x: 0,
+                                            y: 50,
+                                            text: 'д1',
+                                            jump: 1,
+                                        },
+                                        {
+                                            x: 50,
+                                            y: 50,
+                                            text: 'д2',
+                                            jump: 1
+                                        }
+                                    ]
+                                },
+                                {
+                                    x: 0,
+                                    y: 0,
+                                    number: 1,
+                                    text: "Текст2",
+                                    buttons: [
+                                        {
+                                            x: 0,
+                                            y: 50,
+                                            text: 'конец',
+                                            jump: 2,
+                                        }
+                                    ]
+                                }
+                            ],
                         });
                     }}
                 >

@@ -43,7 +43,7 @@ function SlideStructure(props) {
                     align={"center"}
                     verticalAlign={"middle"}
                 />
-                {common.filter(obj => obj.field === globalStore.selectedField.toString()).map((eachObject, i) => (
+                {common.filter(obj => obj.field === globalStore.selectedField).map((eachObject, i) => (
                     <Group
                         key={i}
                         onMouseOver={(e) => {

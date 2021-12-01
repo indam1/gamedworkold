@@ -11,9 +11,28 @@ const nodemailer = require('nodemailer');
 router.post(
     '/register',
     [
-        check('email', 'Некорректный email').isEmail(),
-        check('password', 'Минимальная длина пароля 8 символов')
+        check('email')
+            .isEmail()
+            .withMessage('Некорректный email'),
+        check('password')
             .isLength({min: 8})
+            .withMessage('Минимальная длина пароля - 8 символов')
+            .matches(/\d/)
+            .withMessage('Пароль должен содержать число')
+            .matches(/[A-Z]/)
+            .withMessage('Пароль должен минимум одну заглавную букву')
+            .matches(/[a-z]/)
+            .withMessage('Пароль должен минимум одну строчную букву'),
+        check('firstName')
+            .isLength({min: 3})
+            .withMessage('Минимальная длина имени - 3 символа')
+            .matches(/\D/)
+            .withMessage('Имя не может содержать число'),
+        check('lastName')
+            .isLength({min: 3})
+            .withMessage('Минимальная длина фамилии - 3 символа')
+            .matches(/\D/)
+            .withMessage('Фамилия не может содержать число'),
     ],
     async (req, res) => {
         try {
@@ -28,7 +47,7 @@ router.post(
             }
 
 
-            const {email, password, fullName} = req.body
+            const {email, password, firstName, lastName} = req.body
 
             const candidate = await User.findOne({email})
 
@@ -38,7 +57,7 @@ router.post(
 
 
             const hashedPassword = await bcrypt.hash(password, 12)
-            const user = new User({email: email, password: hashedPassword, fullName: fullName, isConfirmed: false})
+            const user = new User({email: email, password: hashedPassword, firstName: firstName, lastName: lastName, isConfirmed: false})
 
             await user.save()
 
@@ -92,7 +111,7 @@ router.post(
             if (!errors.isEmpty()) {
                 return res.status(400).json({
                     errors: errors.array(),
-                    message: 'Некорректный данные при входе в систему'
+                    message: 'Некорректные данные при входе в систему'
                 })
             }
 
@@ -125,19 +144,26 @@ router.post(
 
 // /api/auth/change
 router.post('/change', [
-    check('oldPassword', 'Минимальная длина пароля 8 символов')
-        .isLength({min: 8}),
-    check('newPassword', 'Минимальная длина пароля 8 символов')
+    check('oldPassword')
         .isLength({min: 8})
+        .withMessage('Минимальная длина пароля - 8 символов'),
+    check('newPassword')
+        .isLength({min: 8})
+        .withMessage('Минимальная длина пароля - 8 символов')
+        .matches(/\d/)
+        .withMessage('Пароль должен содержать число')
+        .matches(/[A-Z]/)
+        .withMessage('Пароль должен минимум одну заглавную букву')
+        .matches(/[a-z]/)
+        .withMessage('Пароль должен минимум одну строчную букву'),
 ], async (req, res) => {
     try {
         const errors = validationResult(req)
 
-
         if (!errors.isEmpty()) {
             return res.status(400).json({
                 errors: errors.array(),
-                message: 'Некорректный данные при входе в систему'
+                message: 'Некорректные данные при входе в систему'
             })
         }
 
@@ -151,7 +177,7 @@ router.post('/change', [
         }
 
         const hashedPassword = await bcrypt.hash(newPassword, 12)
-        const userRes = await User.findOneAndUpdate({email}, {password: hashedPassword})
+        await User.findOneAndUpdate({email}, {password: hashedPassword})
 
         res.status(201).json({message: "Пароль изменен"})
     } catch (e) {

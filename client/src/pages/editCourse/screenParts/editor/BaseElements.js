@@ -58,7 +58,7 @@ const BaseElements = (props) => {
                             text: "Something",
                             fill: "#000002",
                             id: 'text' + counterStore.counterText.toString(),
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
                             name: 'object',
                             fontFamily: "Arial",
                         });
@@ -108,7 +108,7 @@ const BaseElements = (props) => {
                             radiusY: 25,
                             fill: "#000002",
                             id: 'ellipse' + counterStore.counterEllipse.toString(),
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
                             name: 'object',
                         });
                     }}
@@ -154,7 +154,7 @@ const BaseElements = (props) => {
                             height: 25,
                             fill: "#000002",
                             id: 'rectangle' + counterStore.counterRectangle.toString(),
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
                             name: 'object',
                         });
                     }}
@@ -201,7 +201,7 @@ const BaseElements = (props) => {
                             height: 25,
                             fill: "#000002",
                             id: 'image' + counterStore.counterImage.toString(),
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
                             name: 'object',
                             src: 'enter link',
                         });

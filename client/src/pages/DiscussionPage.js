@@ -26,7 +26,7 @@ function DiscussionPage() {
     }, [token, discussionId, request])
 
     useEffect(() => {
-        getDiscussion()
+        getDiscussion().then().catch()
     }, [getDiscussion])
 
     if (loading) {

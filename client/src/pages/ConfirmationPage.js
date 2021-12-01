@@ -18,7 +18,10 @@ function ConfirmationPage() {
         getToken()
     }, [getToken])
 
-    return <Link to={"/"}>Вернуться на главную</Link>
+    return <>
+        <p>Вы подтвердили свой аккаунт</p>
+        <Link to={"/"}>Вернуться на главную</Link>
+    </>
 }
 
 export default ConfirmationPage

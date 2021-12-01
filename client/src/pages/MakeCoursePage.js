@@ -20,13 +20,14 @@ import UpScreenEditor from "./editCourse/screenParts/UpScreenEditor";
 import {toJS} from "mobx";
 import {AuthContext} from "../context/AuthContext";
 import {useHttp} from "../hooks/http.hook";
-import {useParams} from "react-router-dom";
+import {useHistory, useParams} from "react-router-dom";
 import {StageStoreContext} from "./editCourse/stores/stageStore";
 
 const MakeCoursePage = () => {
     const {token} = useContext(AuthContext)
     const {request, loading} = useHttp()
     const courseId = useParams().id
+    const history = useHistory()
 
     const getCourse = useCallback(async () => {
         try {
@@ -38,6 +39,7 @@ const MakeCoursePage = () => {
             elemStore.setCourse(fetched.course.objects)
             elemStore.setName(fetched.course.name)
         } catch (e) {
+            history.push("/")
         }
     }, [token, courseId, request])
 
@@ -54,8 +56,14 @@ const MakeCoursePage = () => {
     const elemStore = useContext(ElemStoreContext);
     const stageStore = useContext(StageStoreContext);
 
-    stageStore.setStage(stageRef)
-    stageStore.setLayerRef(layerRef)
+    useEffect(() => {
+        stageStore.setStage(stageRef)
+        stageStore.setLayerRef(layerRef)
+        return () => {
+            stageStore.setStage(null)
+            stageStore.setLayerRef(null)
+        }
+    })
 
     const checkRemove = (e) => {
         if (globalStore.selectedShape != null && e.keyCode === 46) {
@@ -76,6 +84,12 @@ const MakeCoursePage = () => {
             } else if (element === "test") {
                 const elms = toJS(elemStore.tests).filter(item => globalStore.selectedShape.id !== item.id);
                 elemStore.setTests(elms);
+            } else if (element === "flashcards") {
+                const elms = toJS(elemStore.flashcards).filter(item => globalStore.selectedShape.id !== item.id);
+                elemStore.setFlashcards(elms);
+            } else if (element === "textquest") {
+                const elms = toJS(elemStore.textquests).filter(item => globalStore.selectedShape.id !== item.id);
+                elemStore.setTextquests(elms);
             }
             //#ToDo addRemove
 

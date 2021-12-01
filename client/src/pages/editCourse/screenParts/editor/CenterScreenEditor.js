@@ -46,7 +46,7 @@ const CenterScreenEditor = (props) => {
                     stroke={"#f2f2f2"}
                 />
                 {elemStore.texts.map((eachText, i) => (
-                    eachText.field === globalStore.selectedField.toString() && (<TextElementEditor
+                    eachText.field === globalStore.selectedField && (<TextElementEditor
                         key={i}
 
                         shapeProps={eachText}
@@ -69,7 +69,7 @@ const CenterScreenEditor = (props) => {
                 ))}
 
                 {elemStore.ellipses.map((eachEllipse, i) => (
-                    eachEllipse.field === globalStore.selectedField.toString() && (<EllipseElementEditor
+                    eachEllipse.field === globalStore.selectedField && (<EllipseElementEditor
                         key={i}
 
                         shapeProps={eachEllipse}
@@ -92,7 +92,7 @@ const CenterScreenEditor = (props) => {
                 ))}
 
                 {elemStore.rectangles.map((eachRectangle, i) => (
-                    eachRectangle.field === globalStore.selectedField.toString() && (<RectangleElementEditor
+                    eachRectangle.field === globalStore.selectedField && (<RectangleElementEditor
                         key={i}
 
                         shapeProps={eachRectangle}
@@ -115,7 +115,7 @@ const CenterScreenEditor = (props) => {
                 ))}
 
                 {elemStore.images.map((eachImage, i) => (
-                    eachImage.field === globalStore.selectedField.toString() && (<ImageElementEditor
+                    eachImage.field === globalStore.selectedField && (<ImageElementEditor
                         key={i}
 
                         shapeProps={eachImage}
@@ -138,7 +138,7 @@ const CenterScreenEditor = (props) => {
                 ))}
 
                 {elemStore.tests.map((eachTest, i) => (
-                    eachTest.field === globalStore.selectedField.toString() && (<TestElementEditor
+                    eachTest.field === globalStore.selectedField && (<TestElementEditor
                         key={i}
 
                         shapeProps={eachTest}
@@ -161,7 +161,7 @@ const CenterScreenEditor = (props) => {
                 ))}
 
                 {elemStore.flashcards.map((eachFlashcards, i) => (
-                    eachFlashcards.field === globalStore.selectedField.toString() && (<FlashcardsElementEditor
+                    eachFlashcards.field === globalStore.selectedField && (<FlashcardsElementEditor
                         key={i}
 
                         shapeProps={eachFlashcards}
@@ -184,7 +184,7 @@ const CenterScreenEditor = (props) => {
                 ))}
 
                 {elemStore.textquests.map((eachTextquest, i) => (
-                    eachTextquest.field === globalStore.selectedField.toString() && (<TextquestElementEditor
+                    eachTextquest.field === globalStore.selectedField && (<TextquestElementEditor
                         key={i}
 
                         shapeProps={eachTextquest}

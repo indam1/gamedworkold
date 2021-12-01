@@ -66,6 +66,9 @@ const UpScreenEditor = (props) => {
                     text={"Главная"}
                     fontFamily={"Montserrat"}
                     x={mainWidth * 0.12}
+                    onClick={() => {
+                        window.location.href = "http://localhost:3000/"
+                    }}
                 />
                 <Text
                     onMouseOver={(e) => {
@@ -82,6 +85,9 @@ const UpScreenEditor = (props) => {
                     text={"Все курсы"}
                     fontFamily={"Montserrat"}
                     x={mainWidth * 0.24}
+                    onClick={() => {
+                        window.location.href = "http://localhost:3000/courses"
+                    }}
                 />
                 <Text
                     onMouseOver={(e) => {
@@ -98,6 +104,9 @@ const UpScreenEditor = (props) => {
                     text={"Мои курсы"}
                     fontFamily={"Montserrat"}
                     x={mainWidth * 0.36}
+                    onClick={() => {
+                        window.location.href = "http://localhost:3000/mycourses"
+                    }}
                 />
 
                 {globalStore.isEditorMode && (

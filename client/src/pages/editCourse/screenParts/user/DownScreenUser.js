@@ -37,7 +37,8 @@ function DownScreenUser(props) {
                     height={150}
                     align={"center"}
                     verticalAlign={"middle"}
-                    text={globalStore.selectedField.toString()}
+                    text={"ToDo"}
+                    // text={globalStore.selectedField.toString()}
                     fill={"white"}
                     fontSize={30}
                     fontFamily={"Montserrat"}
@@ -55,7 +56,7 @@ function DownScreenUser(props) {
                         e.currentTarget.opacity(1);
                     }}
                     onClick={() => {
-                        globalStore.setField(globalStore.selectedField - 1);
+                        // globalStore.setField(globalStore.selectedField - 1);
                     }}
                 />
 
@@ -72,7 +73,7 @@ function DownScreenUser(props) {
                         e.currentTarget.opacity(1);
                     }}
                     onClick={() => {
-                        globalStore.setField(globalStore.selectedField + 1);
+                        // globalStore.setField(globalStore.selectedField + 1);
                     }}
                 />
             </Group>

@@ -1,1 +1,30 @@
-@import "~materialize-css/dist/css/materialize.min.css";
+//             const group1 = new Konva.Group({
+//                 width: mainWidth * 0.1,
+//                 height: mainHeight * 0.06,
+//                 x: mainWidth * 0.04,
+//                 y: mainHeight * 0.01 - mainHeight * 0.06 / 2 + mainHeight * 0.03 / 2,
+//             })
+//
+//             const backRect1 = new Konva.Rect({
+//                 width: mainWidth * 0.1,
+//                 height: mainHeight * 0.06,
+//                 fill: 'blue',
+//                 stroke: "black",
+//                 strokeWidth: 1,
+//             })
+//
+//             const buttonRect1 = new Konva.Rect({
+//                 width: mainWidth * 0.01,
+//                 height: mainHeight * 0.06,
+//                 fill: "grey",
+//                 x: mainWidth * 0.08,
+//             })
+//
+//             buttonRect1.on('click', () => {
+//                 const rect = new Konva.Rect({
+//                     width: mainWidth * 0.01,
+//                     height: mainHeight * 0.02,
+//                     fill: "white",
+//                     x: mainWidth * 0.01,
+//                     y: mainHeight * 0.02,
+//                 })

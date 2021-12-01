@@ -10,6 +10,9 @@ function ProfilePage() {
     const [user, setUser] = useState(null)
     const userId = useParams().id
 
+    const [message, setMessage] = useState("")
+    const [open, setOpen] = useState(false)
+
     const getUser = useCallback(async () => {
         try {
             console.log(token)
@@ -31,7 +34,20 @@ function ProfilePage() {
     return (
         <>
             <h2>Профиль</h2>
-            {!loading && user && <Profile user={user} request={request} />}
+            {!loading && user && <Profile
+                message={message}
+                open={open}
+                user={user}
+                request={request}
+                onChange={(smth) => {
+                    setOpen(true)
+                    setMessage(smth);
+                }}
+
+                changeOpen={(smth) => {
+                    setOpen(smth)
+                }}
+            />}
         </>
     )
 }

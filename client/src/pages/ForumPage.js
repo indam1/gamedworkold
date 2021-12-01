@@ -3,50 +3,14 @@ import {useHttp} from '../hooks/http.hook'
 import {AuthContext} from '../context/AuthContext'
 import {DiscussionsList} from "./components/DiscussionsList";
 import {useHistory} from "react-router-dom";
-import {Box, ButtonUnstyled, buttonUnstyledClasses, FormControl, Input, InputLabel, Stack} from "@mui/material";
-import styled from "@emotion/styled";
-
-const CustomButtonRoot = styled('button')(`
-  background-color: #6FE9CD;
-  padding: 15px 20px;
-  border-radius: 10px;
-  color: #000;
-  font-weight: 600;
-  font-family: Montserrat;
-  font-size: 16px;
-  transition: all 200ms ease;
-  cursor: pointer;
-  box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 0 rgba(0, 127, 255, 0);
-  border: none;
-
-  &:hover {
-    background-color: #6FE9CD;
-    opacity: 0.4; 
-  }
-
-  &.${buttonUnstyledClasses.active} {
-    background-color: #138C71;
-  }
-
-  &.${buttonUnstyledClasses.focusVisible} {
-    box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 5px rgba(0, 127, 255, 0.5);
-    outline: none;
-  }
-
-  &.${buttonUnstyledClasses.disabled} {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: 0 0 0 0 rgba(0, 127, 255, 0);
-  }
-`);
-
-function CustomButton(props) {
-    return <ButtonUnstyled {...props} component={CustomButtonRoot}/>;
-}
+import {Box, FormControl, Input, InputLabel, Stack} from "@mui/material";
+import CustomButton from "./components/CustomButton";
 
 export const ForumPage = () => {
     const history = useHistory()
     const [discussions, setDiscussions] = useState([])
+    const [curDiscussions, setCurDiscussions] = useState([])
+    const [filter, setFilter] = useState([])
     const {loading, request} = useHttp()
     const {token} = useContext(AuthContext)
 
@@ -56,14 +20,17 @@ export const ForumPage = () => {
         setDiscussionTheme(event.target.value)
     }
 
-    const fetchDiscussions = useCallback(async () => {
-        try {
-            const fetched = await request('/api/forum', 'GET', null, {
-                Authorization: `Bearer ${token}`
-            })
-            setDiscussions(fetched)
-        } catch (e) {}
-    }, [token, request])
+    const filterHandler = event => {
+        setFilter(event.target.value)
+    }
+
+    const searchHandler = () => {
+        const regex = new RegExp(filter, 'i')
+        const newDiscussion = discussions.filter(item => {
+            return item.theme.search(regex) !== -1
+        })
+        setCurDiscussions(newDiscussion)
+    }
 
     const createDiscussion = async () => {
         try {
@@ -76,6 +43,17 @@ export const ForumPage = () => {
         } catch (e) {}
     }
 
+    const fetchDiscussions = useCallback(async () => {
+        try {
+            const fetched = await request('/api/forum', 'GET', null, {
+                Authorization: `Bearer ${token}`
+            })
+            setDiscussions(fetched)
+            setCurDiscussions(fetched)
+        } catch (e) {}
+    }, [token, request])
+
+
     useEffect(() => {
         fetchDiscussions()
     }, [fetchDiscussions])
@@ -87,7 +65,36 @@ export const ForumPage = () => {
     return (
         <>
             <h2>Все обсуждения</h2>
-            {!loading && <DiscussionsList discussions={discussions} />}
+            <Box display={"flex"}>
+                <Box m={"auto"}>
+                    <Stack spacing={3} style={{alignItems: "center"}}>
+                        <FormControl variant={"standard"}>
+                            <InputLabel htmlFor="standard-adornment-password">Theme</InputLabel>
+                            <Input
+                                required
+                                id="standard-required"
+                                value={filter}
+                                onChange={filterHandler}
+                                label="Theme"
+                                variant="standard"
+                                name="theme"
+                            />
+                        </FormControl>
+
+                        <Box sx={{boxShadow: 3}} style={{borderRadius: 10}}>
+                            <CustomButton
+                                disabled={loading}
+                                onClick={searchHandler}
+                                style={{width: "100%"}}
+                                variant="contained"
+                            >
+                                Search
+                            </CustomButton>
+                        </Box>
+                    </Stack>
+                </Box>
+            </Box>
+            {!loading && <DiscussionsList discussions={curDiscussions} />}
             <Box display={"flex"}>
                 <Box m={"auto"}>
                     <Stack spacing={3} style={{alignItems: "center"}}>

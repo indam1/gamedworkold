@@ -1,14 +1,5 @@
 import React, {useState} from "react";
 import {Group, Rect, Text} from "react-konva";
-import {
-    changeAnswerVisible,
-    changeButtonTextAndVisible,
-    changeButtonVisible,
-    changeCurQuestion,
-    changeQuestionVisible,
-    changeResultState,
-    changeResultStateAndVisible
-} from "../../change/Test";
 
 function TestElementUser({shapeProps, onChange}) {
     const [flashState, setFlashState] = useState('Start');
@@ -195,7 +186,19 @@ function TestElementUser({shapeProps, onChange}) {
                             onChange({
                                 ...shapeProps,
                                 curQuestion: shapeProps.curQuestion + 1,
-                                button: changeButtonTextAndVisible(shapeProps, "Дальше", false),
+                                button: {
+                                    x: shapeProps.button.x,
+                                    y: shapeProps.button.y,
+                                    text: "Дальше",
+                                    height: shapeProps.button.height,
+                                    width: shapeProps.button.width,
+                                    backgroundFill: shapeProps.button.backgroundFill,
+                                    textFill: shapeProps.button.textFill,
+                                    fontSize: shapeProps.button.fontSize,
+                                    cornerRadius: shapeProps.button.cornerRadius,
+                                    fontFamily: shapeProps.button.fontFamily,
+                                    visible: false,
+                                }
                             })
                         } else if (flashState === "Wait" && countIter >= shapeProps.questions.length) {
                             setFlashState("Start");

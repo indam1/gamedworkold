@@ -62,14 +62,7 @@ function ElementSettings(props) {
 
                 {globalStore.selectedSettings === 'Flashcards' && (<FlashcardsSettings/>)}
 
-                {/*{globalStore.selectedSettings === 'Textquest' && (*/}
-                {/*    <TextquestSettings*/}
-                {/*        layer={props.layer}*/}
-                {/*        stage={props.stage}*/}
-                {/*        getElem={props.getElem}*/}
-                {/*        setElem={props.setElem}*/}
-                {/*    />*/}
-                {/*)}*/}
+                {globalStore.selectedSettings === 'Textquest' && (<TextquestSettings/>)}
             </Group>
 
             <Rect

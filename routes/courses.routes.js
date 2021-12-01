@@ -7,7 +7,7 @@ const Course = require('../models/Course')
 
 router.get('/courses', auth, async (req, res) => {
     try {
-        const courses = await Course.find({})
+        const courses = await Course.find({}).populate('owner')
         res.json(courses)
     } catch (e) {
         res.status(500).json({message: "Что-то пошло не так, попробуйте снова"})
@@ -16,7 +16,7 @@ router.get('/courses', auth, async (req, res) => {
 
 router.get('/mycourses', auth, async (req, res) => {
     try {
-        const courses = await Course.find({owner: req.user.userId})
+        const courses = await Course.find({owner: req.user.userId}).populate('owner')
         res.json(courses)
     } catch (e) {
         res.status(500).json({message: "Что-то пошло не так, попробуйте снова"})
@@ -53,7 +53,7 @@ router.post('/create/:id', auth, async (req, res) => {
         const course = await Course.findById(req.params.id)
 
         if (course.owner.toString() !== req.user.userId) {
-            res.status(401).json({message: "Этот курс создан не вами"})
+            res.status(400).json({message: "Этот курс создан не вами"})
         }
 
         res.status(201).json({course})
@@ -69,7 +69,7 @@ router.post('/update/:id', auth, async (req, res) => {
         const course = await Course.findByIdAndUpdate(req.params.id, {objects: objects})
 
         if (course.owner.toString() !== req.user.userId) {
-            res.status(401).json({message: "Этот курс создан не вами"})
+            res.status(400).json({message: "Этот курс создан не вами"})
         }
         res.status(201).json({message :"Курс изменен", id: course._id})
     } catch (e) {

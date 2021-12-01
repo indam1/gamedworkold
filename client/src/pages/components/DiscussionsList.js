@@ -15,6 +15,8 @@ export const DiscussionsList = ({discussions}) => {
                     <tr>
                         <th>№</th>
                         <th>Id создателя</th>
+                        <th>Имя создателя</th>
+                        <th>Email создателя</th>
                         <th>Тема</th>
                         <th>Открыть</th>
                     </tr>
@@ -25,7 +27,9 @@ export const DiscussionsList = ({discussions}) => {
                         return (
                             <tr key={discussion._id}>
                                 <td>{index + 1}</td>
-                                <td>{discussion.creator}</td>
+                                <td>{discussion.creator._id}</td>
+                                <td>{discussion.creator.firstName + " " + discussion.creator.lastName}</td>
+                                <td>{discussion.creator.email}</td>
                                 <td>{discussion.theme}</td>
                                 <td>
                                     <Link to={`/forum/${discussion._id}`}>Открыть</Link>

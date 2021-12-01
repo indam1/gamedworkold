@@ -47,7 +47,7 @@ function CustomButton(props) {
 export const Discussion = ({discussion, messages}) => {
     const [text, setText] = useState("")
     const {loading, request} = useHttp()
-    const {token} = useContext(AuthContext)
+    const {userId, token} = useContext(AuthContext)
     const history = useHistory()
 
     const textHandler = event => {
@@ -59,6 +59,7 @@ export const Discussion = ({discussion, messages}) => {
             const data = await request(`/api/forum/send/${discussion._id}`, 'POST', {text: text}, {
                 Authorization: `Bearer ${token}`
             })
+            //setMessages([...messages, data.message])
             console.log("Data: ", data)
             window.location.reload()
         } catch (e) {}
@@ -72,13 +73,17 @@ export const Discussion = ({discussion, messages}) => {
                 <Box m={"auto"}>
                     <p>Id: {discussion._id}</p>
                     <p>Тема: {discussion.theme}</p>
-                    <p>Создатель: {discussion.creator}</p>
+                    <p>Id создателя: {discussion.creator._id}</p>
+                    <p>Имя создателя: {discussion.creator.firstName + " " +discussion.creator.lastName}</p>
+                    <p>Email создателя: {discussion.creator.email}</p>
 
                     <table>
                         <thead>
                         <tr>
                             <th>№</th>
-                            <th>Id владельца</th>
+                            <th>Id отправителя</th>
+                            <th>Имя отправителя</th>
+                            <th>Email отправителя</th>
                             <th>Текст</th>
                         </tr>
                         </thead>
@@ -88,7 +93,9 @@ export const Discussion = ({discussion, messages}) => {
                             return (
                                 <tr key={message._id}>
                                     <td>{index + 1}</td>
-                                    <td>{message.sender}</td>
+                                    <td>{message.sender._id}</td>
+                                    <td>{message.sender.firstName + " " + message.sender.lastName}</td>
+                                    <td>{message.sender.email}</td>
                                     <td>{message.text}</td>
                                 </tr>
                             )

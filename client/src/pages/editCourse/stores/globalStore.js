@@ -4,9 +4,10 @@ import {makeAutoObservable, toJS} from "mobx";
 class GlobalStore {
     selectedShape = null;
     selectedSettings = "";
-    selectedField = 1;
+    // selectedField = 1;
+    selectedField = "0" + " " + "0" + " " + "0" ;
     isEditorMode = true;
-    numFields = [1, 2, 3];
+    numFields = [[[]]];
 
     constructor() {
         makeAutoObservable(this);
@@ -20,8 +21,12 @@ class GlobalStore {
         this.selectedSettings = selectedSettings;
     }
 
-    setField(selectedField) {
-        this.selectedField = selectedField;
+    // setField(selectedField) {
+    //     this.selectedField = selectedField
+    // }
+
+    setField(i, j, k) {
+        this.selectedField = i + " " + j + " " + k;
     }
 
     setEditorMode(isEditorMode) {

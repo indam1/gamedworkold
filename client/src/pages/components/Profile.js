@@ -1,59 +1,12 @@
 import React, {useContext, useState} from 'react'
-import {
-    Box,
-    ButtonUnstyled,
-    buttonUnstyledClasses,
-    FormControl,
-    IconButton,
-    Input,
-    InputAdornment,
-    InputLabel,
-    Stack
-} from "@mui/material";
+import {Box, FormControl, IconButton, Input, InputAdornment, InputLabel, Stack} from "@mui/material";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
-import styled from "@emotion/styled";
 import {AuthContext} from "../../context/AuthContext";
 import {useHistory} from "react-router-dom";
+import CustomButton from "./CustomButton";
+import TransitionAlerts from "./TransitionAlerts";
 
-const CustomButtonRoot = styled('button')(`
-  background-color: #6FE9CD;
-  padding: 15px 20px;
-  border-radius: 10px;
-  color: #000;
-  font-weight: 600;
-  font-family: Montserrat;
-  font-size: 16px;
-  transition: all 200ms ease;
-  cursor: pointer;
-  box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 0 rgba(0, 127, 255, 0);
-  border: none;
-
-  &:hover {
-    background-color: #6FE9CD;
-    opacity: 0.4; 
-  }
-
-  &.${buttonUnstyledClasses.active} {
-    background-color: #138C71;
-  }
-
-  &.${buttonUnstyledClasses.focusVisible} {
-    box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 5px rgba(0, 127, 255, 0.5);
-    outline: none;
-  }
-
-  &.${buttonUnstyledClasses.disabled} {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: 0 0 0 0 rgba(0, 127, 255, 0);
-  }
-`);
-
-function CustomButton(props) {
-    return <ButtonUnstyled {...props} component={CustomButtonRoot}/>;
-}
-
-export const Profile = ({user, request}) => {
+export const Profile = ({user, request, message, open, onChange, changeOpen}) => {
     const history = useHistory()
     const auth = useContext(AuthContext)
 
@@ -88,15 +41,14 @@ export const Profile = ({user, request}) => {
             auth.logout()
             history.push('/login')
         } catch (e) {
+            onChange(e.message)
         }
     }
 
     return (
         <Box display={"flex"}>
             <Box m={"auto"}>
-
-
-                <p>Имя: {user.fullName}</p>
+                <p>Имя: {user.firstName + " " + user.lastName}</p>
                 <p>Почта: {user.email}</p>
                 <p>Id: {user._id}</p>
                 <Stack spacing={2}>
@@ -153,6 +105,11 @@ export const Profile = ({user, request}) => {
                             Change password
                         </CustomButton>
                     </Box>
+                    {open && <TransitionAlerts
+                        style={{borderRadius: 10}}
+                        messages={message}
+                        onChange={changeOpen}
+                    />}
                 </Stack>
             </Box>
         </Box>

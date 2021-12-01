@@ -10,6 +10,7 @@ import {useWindowDimensions} from "../../functions/Functions";
 import {GlobalStoreContext} from "../../stores/globalStore";
 import {ElemStoreContext} from "../../stores/elemStore";
 import {observer} from "mobx-react";
+import TextquestElementUser from "../../elements/user/TextquestElementUser";
 
 function CenterScreenUser(props) {
     const {mainWidth, mainHeight} = useWindowDimensions();
@@ -34,21 +35,21 @@ function CenterScreenUser(props) {
                     stroke={"#f2f2f2"}
                 />
                 {elemStore.ellipses.map((eachEllipse, i) => (
-                    eachEllipse.field === globalStore.selectedField.toString() && (<EllipseElementUser
+                    eachEllipse.field === globalStore.selectedField && (<EllipseElementUser
                         key={i}
                         shapeProps={eachEllipse}
                     />)
                 ))}
 
                 {elemStore.texts.map((eachText, i) => (
-                    eachText.field === globalStore.selectedField.toString() && (<TextElementUser
+                    eachText.field === globalStore.selectedField && (<TextElementUser
                         key={i}
                         shapeProps={eachText}
                     />)
                 ))}
 
                 {elemStore.tests.map((eachTest, i) => (
-                    eachTest.field === globalStore.selectedField.toString() && (<TestElementUser
+                    eachTest.field === globalStore.selectedField && (<TestElementUser
                         key={i}
                         shapeProps={eachTest}
                         onChange={(newAttrs) => {
@@ -60,7 +61,7 @@ function CenterScreenUser(props) {
                 ))}
 
                 {elemStore.flashcards.map((eachFlashcards, i) => (
-                    eachFlashcards.field === globalStore.selectedField.toString() && (<FlashcardsElementUser
+                    eachFlashcards.field === globalStore.selectedField && (<FlashcardsElementUser
                         key={i}
                         shapeProps={eachFlashcards}
                         onChange={(newAttrs) => {
@@ -72,16 +73,28 @@ function CenterScreenUser(props) {
                 ))}
 
                 {elemStore.rectangles.map((eachRectangle, i) => (
-                    eachRectangle.field === globalStore.selectedField.toString() && (<RectangleElementUser
+                    eachRectangle.field === globalStore.selectedField && (<RectangleElementUser
                         key={i}
                         shapeProps={eachRectangle}
                     />)
                 ))}
 
                 {elemStore.images.map((eachImage, i) => (
-                    eachImage.field === globalStore.selectedField.toString() && (<ImageElementUser
+                    eachImage.field === globalStore.selectedField && (<ImageElementUser
                         key={i}
                         shapeProps={eachImage}
+                    />)
+                ))}
+
+                {elemStore.textquests.map((eachTextquest, i) => (
+                    eachTextquest.field === globalStore.selectedField && (<TextquestElementUser
+                        key={i}
+                        shapeProps={eachTextquest}
+                        onChange={(newAttrs) => {
+                            const tqts = elemStore.textquests.slice();
+                            tqts[i] = newAttrs;
+                            elemStore.setTextquests(tqts);
+                        }}
                     />)
                 ))}
             </Group>

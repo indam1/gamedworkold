@@ -15,44 +15,8 @@ import {useHttp} from "../hooks/http.hook";
 import {AuthContext} from "../context/AuthContext";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import GoogleLogin from "react-google-login";
-
-const CustomButtonRoot = styled('button')(`
-  background-color: #6FE9CD;
-  padding: 15px 20px;
-  border-radius: 10px;
-  color: #000;
-  font-weight: 600;
-  font-family: Montserrat;
-  font-size: 16px;
-  transition: all 200ms ease;
-  cursor: pointer;
-  box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 0 rgba(0, 127, 255, 0);
-  border: none;
-
-  &:hover {
-    background-color: #6FE9CD;
-    opacity: 0.4; 
-  }
-
-  &.${buttonUnstyledClasses.active} {
-    background-color: #138C71;
-  }
-
-  &.${buttonUnstyledClasses.focusVisible} {
-    box-shadow: 0 4px 20px 0 rgba(61, 71, 82, 0.1), 0 0 0 5px rgba(0, 127, 255, 0.5);
-    outline: none;
-  }
-
-  &.${buttonUnstyledClasses.disabled} {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: 0 0 0 0 rgba(0, 127, 255, 0);
-  }
-`);
-
-function CustomButton(props) {
-    return <ButtonUnstyled {...props} component={CustomButtonRoot}/>;
-}
+import CustomButton from "./components/CustomButton";
+import TransitionAlerts from "./components/TransitionAlerts";
 
 function AuthPage() {
     const auth = useContext(AuthContext)
@@ -62,6 +26,9 @@ function AuthPage() {
         email: '',
         password: '',
     })
+
+    const [message, setMessage] = useState("")
+    const [open, setOpen] = useState(false)
 
     const handlerShowPassword = () => {
         setShowPassword(!showPassword)
@@ -79,7 +46,10 @@ function AuthPage() {
         try {
             const data = await request('/api/auth/login', 'POST', {...form})
             auth.login(data.token, data.userId)
-        } catch (e) {}
+        } catch (e) {
+            setMessage(e.message)
+            setOpen(true)
+        }
     }
 
     const googleSuccess = async (res) => {
@@ -205,6 +175,13 @@ function AuthPage() {
                             Sign In
                         </CustomButton>
                     </Box>
+                    {open && <TransitionAlerts
+                        style={{width: "25%", borderRadius: 10}}
+                        messages={message}
+                        onChange={(smth) => {
+                            setOpen(smth)
+                        }}
+                    />}
                     <GoogleLogin
                         clientId={"395298739700-7tp6r19ofpj2hllip8i7vn8mnced5ol0.apps.googleusercontent.com"}
                         onSuccess={googleSuccess}

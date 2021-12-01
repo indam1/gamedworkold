@@ -3,13 +3,22 @@ import {Group} from "react-konva";
 import {Html} from "react-konva-utils";
 import {useWindowDimensions} from "../functions/Functions";
 import {GlobalStoreContext} from "../stores/globalStore";
+import TextAndColor from "./common/TextAndColor";
+import {ElemStoreContext} from "../stores/elemStore";
+import TextAndButton from "./common/TextAndButton";
+import TextAndTwoButtons from "./common/TextAndTwoButtons";
+import {observer} from "mobx-react";
+import TextAndTextarea from "./common/TextAndTextarea";
+import TextAndList from "./common/TextAndList";
+import HeaderText from "./common/HeaderText";
 
 function TextquestSettings(props) {
     const globalStore = useContext(GlobalStoreContext);
+    const elemStore = useContext(ElemStoreContext);
+
+    const options = ["Cursive", "Fantasy", "Montserrat", "Arial", "Helvetica", "Gill Sans", "Lucida", "Helvetica Narrow", "Times", "Times New Roman", "Palatino", "Bookman", "New Century Schoolbook", "Andale Mono", "Courier New", "Courier", "Lucidatypewriter", "Fixed", "Comic Sans", "Comic Sans MS", "Zapf Chancery", "Coronetscript", "Florence", "Parkavenue", "Impact", "Arnoldboecklin", "Oldtown", "Blippo", "Brushstroke"].sort();
 
     const selectedShape = globalStore.selectedShape;
-    const textquests = props.getElem.get('textquest');
-    const setTextquests = props.setElem.get('textquest');
     const {mainWidth} = useWindowDimensions();
     return (
         <React.Fragment>
@@ -18,284 +27,290 @@ function TextquestSettings(props) {
                 y={60}
                 width={mainWidth * 0.1 - 16}
             >
-                <Html>
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <div style={{
-                            width: mainWidth * 0.05 - 8,
-                            textAlign: 'center',
-                        }}>
-                            <p style={{
-                                fontFamily: "Montserrat",
-                                fontSize: 14,
-                                color: "white",
-                            }}>Цвет фона:</p>
-                        </div>
-                        <div style={{
-                            width: mainWidth * 0.05 - 8,
-                            textAlign: 'center',
-                        }}>
-                            <input style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 5,
-                                verticalAlign: "middle",
-                                backgroundColor: "#313c45",
-                                resize: "none",
-                                fontSize: 14,
-                                textAlign: "center",
-                                border: "none",
-                                outline: "none",
-                            }} onChange={(e) => {
-                                const newAttrs = selectedShape;
-                                newAttrs.fill = e.target.value;
-                                const tqts = textquests.slice();
-                                tqts[tqts.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
-                                setTextquests(tqts);
-                            }} type={"color"} value={selectedShape?.fill}/>
-                        </div>
-                    </div>
+                <TextAndColor
+                    y={10}
+                    text={"Цвет фона:"}
+                    attr={selectedShape.fill}
 
-                    <div style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}>
-                        <div style={{
-                            width: mainWidth * 0.05 - 8,
-                            textAlign: 'center',
-                        }}>
-                            <p style={{
-                                fontFamily: "Montserrat",
-                                fontSize: 14,
-                                color: "white",
-                            }}>Добавить юнит:</p>
-                        </div>
-                        <div style={{
-                            width: mainWidth * 0.05 - 8,
-                            textAlign: 'center',
-                        }}>
-                            <input style={{
-                                width: 30,
-                                height: 30,
-                                borderRadius: 5,
-                                backgroundColor: "#313c45",
-                                resize: "none",
-                                fontSize: 20,
-                                textAlign: "center",
-                                color: "white"
-                            }} type={"button"} onClick={() => {
+                    onChange={(colorPicker) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.fill = colorPicker.value;
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndTextarea
+                    y={10 + 50 * 1}
+                    text={"Радиус углов:"}
+                    attr={selectedShape.cornerRadius}
+
+                    onChange={(textarea) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.cornerRadius = Number(textarea.value);
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <HeaderText
+                    text={"Текст:"}
+                    y={10 + 50 * 2}
+                />
+                <TextAndTextarea
+                    y={10 + 50 * 3}
+                    text={"Размер шрифта:"}
+                    attr={selectedShape.text.fontSize}
+
+                    onChange={(textarea) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.text.fontSize = Number(textarea.value);
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndList
+                    y={10 + 50 * 4}
+                    text={"Семейство шрифта:"}
+                    attr={selectedShape.text.fontFamily}
+                    options={options}
+
+                    onChange={(e) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.text.fontFamily = e.currentTarget.children[1].text();
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndColor
+                    y={10 + 50 * 5}
+                    text={"Цвет:"}
+                    attr={selectedShape.text.fill}
+
+                    onChange={(colorPicker) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.text.fill = colorPicker.value;
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <HeaderText
+                    text={"Кнопка:"}
+                    y={10 + 50 * 6}
+                />
+                <TextAndTextarea
+                    y={10 + 50 * 7}
+                    text={"Ширина:"}
+                    attr={selectedShape.button.width}
+
+                    onChange={(textarea) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.button.width = Number(textarea.value);
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndTextarea
+                    y={10 + 50 * 8}
+                    text={"Высота:"}
+                    attr={selectedShape.button.height}
+
+                    onChange={(textarea) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.button.height = Number(textarea.value);
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndTextarea
+                    y={10 + 50 * 9}
+                    text={"Радиус углов:"}
+                    attr={selectedShape.button.cornerRadius}
+
+                    onChange={(textarea) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.button.cornerRadius = Number(textarea.value);
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndColor
+                    y={10 + 50 * 10}
+                    text={"Цвет фона:"}
+                    attr={selectedShape.button.backgroundFill}
+
+                    onChange={(colorPicker) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.button.backgroundFill = colorPicker.value;
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndTextarea
+                    y={10 + 50 * 11}
+                    text={"Размер шрифта:"}
+                    attr={selectedShape.button.fontSize}
+
+                    onChange={(textarea) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.button.fontSize = Number(textarea.value);
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndList
+                    y={10 + 50 * 12}
+                    text={"Семейство шрифта:"}
+                    attr={selectedShape.button.fontFamily}
+                    options={options}
+
+                    onChange={(e) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.button.fontFamily = e.currentTarget.children[1].text();
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndColor
+                    y={10 + 50 * 13}
+                    text={"Цвет шрифта:"}
+                    attr={selectedShape.button.textFill}
+
+                    onChange={(colorPicker) => {
+                        const newAttrs = selectedShape;
+                        newAttrs.button.textFill = colorPicker.value;
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+                <TextAndButton
+                    y={10 + 50 * 14}
+                    text={"Добавить юнит:"}
+
+                    onClick={() => {
+                        const newAttrs = selectedShape;
+                        newAttrs.units = [...newAttrs.units, {
+                            x: 0,
+                            y: 0,
+                            number: 0,
+                            text: "Текст",
+                            buttons: [
+                                {
+                                    x: 30,
+                                    y: 106,
+                                    text: 'действие 1',
+                                    jump: 1,
+                                },
+                                {
+                                    x: 30,
+                                    y: 162,
+                                    text: 'действие 2',
+                                    jump: 1,
+                                }
+                            ],
+                        }];
+                        const elms = elemStore.textquests.slice();
+                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                        elemStore.setTextquests(elms);
+                    }}
+                />
+
+                {selectedShape.units.map((eachUnit, i) => (
+                    <React.Fragment key={i}>
+                        <TextAndTwoButtons
+                            text={eachUnit.text}
+                            y={10 + 50 * (15 + i * 2)}
+
+                            onClickFirst={() => {
                                 const newAttrs = selectedShape;
-                                newAttrs.units = [...newAttrs.units, {
-                                    number: 1,
-                                    text: "Text",
-                                    buttons: [],
-                                    x: 0,
-                                    y: 0,
-                                    backgroundFill: "blue",
-                                    width: 100,
-                                    height: 100,
-                                    size: 30,
-                                    textFill: "white",
+                                newAttrs.curUnit = eachUnit.number;
+                                const elms = elemStore.textquests.slice();
+                                elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                                elemStore.setTextquests(elms);
+                            }}
+
+                            onClickSecond={() => {
+                                const newAttrs = selectedShape;
+                                newAttrs.units = newAttrs.units.filter(item => item !== newAttrs.units[i]);
+                                const elms = elemStore.textquests.slice();
+                                elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                                elemStore.setTextquests(elms);
+                            }}
+                        />
+                        <TextAndTextarea
+                            y={10 + 50 * (16 + i * 2)}
+                            text={"Номер юнита: "}
+                            attr={eachUnit.number}
+
+                            onChange={(textarea) => {
+                                const newAttrs = selectedShape;
+                                newAttrs.units[i].number = Number(textarea.value);
+                                const elms = elemStore.textquests.slice();
+                                elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                                elemStore.setTextquests(elms);
+                            }}
+                        />
+                        <TextAndButton
+                            text={"Добавить кнопку: "}
+                            y={10 + 50 * (17 + i * 2)}
+
+                            onClick={() => {
+                                const newAttrs = selectedShape;
+                                newAttrs.units[i].buttons = [...newAttrs.units[i].buttons, {
+                                    x: 30,
+                                    y: 106,
+                                    text: 'действие 1',
+                                    jump: 1,
                                 }];
-                                const tqts = textquests.slice();
-                                tqts[tqts.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
-                                setTextquests(tqts);
-                            }} value={'+'}/>
-                        </div>
-                    </div>
+                                const elms = elemStore.textquests.slice();
+                                elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                                elemStore.setTextquests(elms);
+                            }}
+                        />
+                        {eachUnit.buttons.map((eachButton, j) => (
+                            <React.Fragment key={j}>
+                                <TextAndButton
+                                    text={eachButton.text}
+                                    y={10 + 50 * (18 + i * 2 + j * 2)}
 
-                    {selectedShape?.units?.map((eachText, i) => (
-                        <div>
-                            <div key={i} style={{
-                                display: "flex",
-                                flexDirection: "row",
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
-
-                                <div style={{
-                                    width: mainWidth * 0.033 - 5,
-                                    textAlign: 'center',
-                                }}>
-                                    <p style={{
-                                        fontFamily: "Montserrat",
-                                        fontSize: 14,
-                                        color: "white",
-                                    }}>{selectedShape?.units[i].number}:</p>
-                                </div>
-
-                                <div style={{
-                                    width: mainWidth * 0.033 - 5,
-                                    textAlign: 'center',
-                                }}>
-                                    <input style={{
-                                        height: 30,
-                                        borderRadius: 5,
-                                        backgroundColor: "#313c45",
-                                        resize: "none",
-                                        fontSize: 20,
-                                        textAlign: "center",
-                                        color: "white"
-                                    }} type={"button"} onClick={() => {
+                                    onClick={() => {
                                         const newAttrs = selectedShape;
-                                        newAttrs.curText = i;
-                                        const tqts = textquests.slice();
-                                        tqts[tqts.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
-                                        setTextquests(tqts);
-                                    }} value={'choose'}/>
-                                </div>
+                                        newAttrs.units[i].buttons = newAttrs.units[i].buttons.filter(item => item !== newAttrs.units[i].buttons[j]);
+                                        const elms = elemStore.textquests.slice();
+                                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                                        elemStore.setTextquests(elms);
+                                    }}
+                                />
+                                <TextAndTextarea
+                                    y={10 + 50 * (19 + i * 2 + j * 2)}
+                                    text={"Прыжок на юнит: "}
+                                    attr={eachButton.jump}
 
-                                <div style={{
-                                    width: mainWidth * 0.033 - 5,
-                                    textAlign: 'center',
-                                }}>
-                                    <input style={{
-                                        width: 30,
-                                        height: 30,
-                                        borderRadius: 5,
-                                        backgroundColor: "#313c45",
-                                        resize: "none",
-                                        fontSize: 20,
-                                        textAlign: "center",
-                                        color: "white"
-                                    }} type={"button"} onClick={() => {
+                                    onChange={(textarea) => {
                                         const newAttrs = selectedShape;
-                                        newAttrs.units = newAttrs.units.filter(item => item !== newAttrs.units[i]);
-                                        const tqts = textquests.slice();
-                                        tqts[tqts.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
-                                        setTextquests(tqts);
-                                    }} value={'-'}/>
-                                </div>
-                            </div>
-
-                            {selectedShape?.curText === i && (<div>
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "row",
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                    }}>
-                                        <div style={{
-                                            width: mainWidth * 0.05 - 8,
-                                            textAlign: 'center',
-                                        }}>
-                                            <p style={{
-                                                fontFamily: "Montserrat",
-                                                fontSize: 14,
-                                                color: "white",
-                                            }}>Добавить кнопку</p>
-                                        </div>
-
-                                        <div style={{
-                                            width: mainWidth * 0.05 - 8,
-                                            textAlign: 'center',
-                                        }}>
-                                            <input style={{
-                                                width: 30,
-                                                height: 30,
-                                                borderRadius: 5,
-                                                backgroundColor: "#313c45",
-                                                resize: "none",
-                                                fontSize: 20,
-                                                textAlign: "center",
-                                                color: "white"
-                                            }} type={"button"} onClick={() => {
-                                                const newAttrs = selectedShape;
-                                                newAttrs.units[i].buttons = [...newAttrs.units[i].buttons, {
-                                                    number: 1,
-                                                    text: "Answer",
-                                                    jump: 0,
-                                                }];
-                                                const tqts = textquests.slice();
-                                                tqts[tqts.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
-                                                setTextquests(tqts);
-                                            }} value={'+'}/>
-                                        </div>
-                                    </div>
-
-                                    {selectedShape?.units[i].buttons.map((eachButton, j) => (
-                                        <div
-                                            key={j}
-                                            style={{
-                                                display: "flex",
-                                                flexDirection: "row",
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                            }}>
-                                            <div style={{
-                                                width: mainWidth * 0.033 - 5,
-                                                textAlign: 'center',
-                                            }}>
-                                                <p style={{
-                                                    fontFamily: "Montserrat",
-                                                    fontSize: 14,
-                                                    color: "white",
-                                                }}>{selectedShape?.units[i].buttons[j].number}:</p>
-                                            </div>
-
-                                            <div style={{
-                                                width: mainWidth * 0.033 - 5,
-                                                textAlign: 'center',
-                                            }}>
-                                                <textarea style={{
-                                                    overflow: "hidden",
-                                                    borderRadius: 5,
-                                                    verticalAlign: "middle",
-                                                    width: 25,
-                                                    height: 20,
-                                                    backgroundColor: "#313c45",
-                                                    color: "white",
-                                                    resize: "none",
-                                                    fontSize: 14,
-                                                    textAlign: "center",
-                                                    border: "none",
-                                                    outline: "none",
-                                                }} onChange={(e) => {
-                                                    const newAttrs = selectedShape;
-                                                    newAttrs.units[i].buttons[j].jump = Number(e.target.value);
-                                                    const tqts = textquests.slice();
-                                                    tqts[tqts.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
-                                                    setTextquests(tqts);
-                                                }} value={selectedShape?.units[i].buttons[j].jump} maxLength={3} rows={1} cols={3}/>
-                                            </div>
-
-                                            <div style={{
-                                                width: mainWidth * 0.033 - 5,
-                                                textAlign: 'center',
-                                            }}>
-                                                <input style={{
-                                                    width: 30,
-                                                    height: 30,
-                                                    borderRadius: 5,
-                                                    backgroundColor: "#313c45",
-                                                    resize: "none",
-                                                    fontSize: 20,
-                                                    textAlign: "center",
-                                                    color: "white"
-                                                }} type={"button"} onClick={() => {
-                                                    const newAttrs = selectedShape;
-                                                    newAttrs.units[i].buttons = newAttrs.units[i].buttons.filter(item => item !== newAttrs.units[i].buttons[j]);
-                                                    const tqts = textquests.slice();
-                                                    tqts[tqts.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
-                                                    setTextquests(tqts);
-                                                }} value={'-'}/>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </Html>
+                                        newAttrs.units[i].buttons[j].jump = Number(textarea.value);
+                                        const elms = elemStore.textquests.slice();
+                                        elms[elms.findIndex((el) => el.id === selectedShape?.id)] = newAttrs;
+                                        elemStore.setTextquests(elms);
+                                    }}
+                                />
+                            </React.Fragment>
+                        ))}
+                    </React.Fragment>
+                ))}
             </Group>
         </React.Fragment>
     );
 }
 
-export default TextquestSettings;
+export default observer(TextquestSettings);

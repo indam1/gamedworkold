@@ -58,20 +58,21 @@ export const Templates = () => {
 
                         elemStore.addTextquest({
                             counter: counterStore.counterCommon,
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
                             x: mainWidth * 0.8 / 2,
                             y: mainHeight * 0.7575 / 2,
-                            curText: 0,
+                            curUnit: 0,
+                            height: 236,
+                            width: 593 * 2,
+                            fill: "#FFFFFE",
+                            end: 2,
+                            opacity: 0.6,
+                            cornerRadius: 5,
                             id: 'textquest' + counterStore.counterTextquest.toString(),
-                            unit: {
-                                height: 236,
-                                width: 593 * 2,
+                            text: {
                                 fontSize: 20,
                                 fontFamily: "Montserrat",
-                                backgroundFill: "#FFFFFE",
-                                textFill: "#000002",
-                                opacity: 0.6,
-                                cornerRadius: 5,
+                                fill: "#000002",
                             },
                             button: {
                                 width: 204,
@@ -82,22 +83,42 @@ export const Templates = () => {
                                 backgroundFill: "#5753C9",
                                 textFill: "#FFFFFE",
                             },
-                            units: [{
-                                x: 30,
-                                y: 22,
-                                number: 0,
-                                text: "Привет, юный стартапер!\n" +
-                                    "Большое начинается с малого. Многие сложные алгоритмы основаны на привычных нам математических операциях! Попробуй написать программу, складывающую два числа. На первый взгляд может показаться сложным! Но я-то точно знаю, что у тебя получится!\n",
-                                buttons: [{
-                                    x: 30,
-                                    y: 106,
-                                    text: 'действие 1'
-                                }, {
-                                    x: 30,
-                                    y: 162,
-                                    text: 'действие 2'
-                                }],
-                            }],
+                            units: [
+                                {
+                                    x: 0,
+                                    y: 0,
+                                    number: 0,
+                                    text: "Текст1",
+                                    buttons: [
+                                        {
+                                            x: 30,
+                                            y: 106,
+                                            text: 'действие 1',
+                                            jump: 1,
+                                        },
+                                        {
+                                            x: 30,
+                                            y: 162,
+                                            text: 'действие 2',
+                                            jump: 1,
+                                        }
+                                    ],
+                                },
+                                {
+                                    x: 0,
+                                    y: 0,
+                                    number: 1,
+                                    text: "Текст2",
+                                    buttons: [
+                                        {
+                                            x: 30,
+                                            y: 106,
+                                            text: 'конец',
+                                            jump: 2,
+                                        }
+                                    ],
+                                }
+                            ],
                         });
                     }}
                 />
@@ -120,7 +141,7 @@ export const Templates = () => {
 
                         elemStore.addFlashcard({
                             counter: counterStore.counterCommon,
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
                             x: mainWidth * 0.8 / 2,
                             y: mainHeight * 0.7575 / 2,
                             height: 253,
@@ -157,11 +178,20 @@ export const Templates = () => {
                                 fill: "#868C92",
                             },
                             input: {
+                                text: "",
                                 x: 30,
-                                y: 145,
-                                width: 158,
-                                height: 25,
+                                y: 140,
+                                width: 161,
+                                height: 34,
                                 fontSize: 20,
+                                backgroundFill: "white",
+                                textFill: "black",
+                                cornerRadius: 5,
+                                fontFamily: "Montserrat",
+                                align: "center",
+                                verticalAlign: "middle",
+                                strokeWidth: 1,
+                                stroke: "black"
                             },
                             button: {
                                 align: 'center',
@@ -213,7 +243,7 @@ export const Templates = () => {
                             id: 'test' + counterStore.counterTest.toString(),
                             curQuestion: 0,
                             counter: counterStore.counterCommon,
-                            field: globalStore.selectedField.toString(),
+                            field: globalStore.selectedField,
 
                             x: mainWidth * 0.8 / 2,
                             y: mainHeight * 0.7575 / 2,

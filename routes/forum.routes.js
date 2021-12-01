@@ -9,7 +9,7 @@ const Message = require('../models/Message')
 
 router.get('/', auth, async (req, res) => {
     try {
-        const discussions = await Discussion.find({})
+        const discussions = await Discussion.find({}).populate('creator')
         res.json(discussions)
     } catch (e) {
         res.status(500).json({message: "Что-то пошло не так, попробуйте снова"})
@@ -50,8 +50,8 @@ router.post('/send/:id', auth, async (req, res) => {
 
 router.get('/:id', auth, async (req, res) => {
     try {
-        const discussion = await Discussion.findById(req.params.id)
-        const messages = await Message.find({discussion: req.params.id})
+        const discussion = await Discussion.findById(req.params.id).populate('creator')
+        const messages = await Message.find({discussion: req.params.id}).populate('sender')
         res.json({discussion, messages})
     } catch (e) {
         res.status(500).json({message: "Что-то пошло не так, попробуйте снова"})
